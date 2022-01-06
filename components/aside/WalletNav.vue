@@ -56,6 +56,7 @@ export default {
       padding: 0;
       margin: 0;
       list-style: none;
+      margin-bottom: 15px;
 
       .item {
         &--icon {

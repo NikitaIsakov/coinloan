@@ -37,24 +37,23 @@ a {
 .btn {
   font-family: $font-main;
   font-size: 1.4rem;
-  padding: 27.5px 83.5px;
+  padding: 15px 25px;
+  max-width: 100%;
+  width: 100%;
   border: none;
   cursor: pointer;
-  text-transform: uppercase;
+  font-weight: 500;
   transition: opacity 0.2s ease;
+  border-radius: 5px;
 
   &:hover,
   &:focus {
     opacity: 0.9;
   }
 
-  @media (max-width: 1330px) {
-    font-size: 1.2rem;
-    padding: 20px 60px;
-
-    &__text {
-      padding: 0;
-    }
+  &__primary {
+    background-color: $clr-primary;
+    color: $clr-secondary;
   }
 }
 

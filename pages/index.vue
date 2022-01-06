@@ -3,30 +3,25 @@
     <Header />
     main.main-page
       <Aside />
-      section.page--content
-        | main content
+      <Main />
   </div>
 </template>
 
 <script>
 import Header from '@/components/layout/Header'
 import Aside from '@/components/layout/Aside'
+import Main from '@/components/layout/Main'
 
 export default {
   components: {
     Header,
-    Aside
+    Aside,
+    Main,
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/scss/vars.scss';
-
-  .page--content {
-    background-color: $clr-bg-content;
-  }
-
   .main-page {
     min-height: calc(100vh - 64px);
   }

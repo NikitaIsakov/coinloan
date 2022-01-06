@@ -103,6 +103,10 @@ export default {
       &:focus {
         opacity: 0.8;
       }
+
+      &.nuxt-link-exact-active {
+        opacity: 0.5;
+      }
     }
   }
 

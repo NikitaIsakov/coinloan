@@ -1,0 +1,79 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  padding: 0;
+  margin: 0;
+  font-size: 62.5%;
+  height: 100%;
+}
+
+body {
+  min-width: 320px;
+  max-width: 1920px;
+  height: 100%;
+  font-family: $font-main;
+  font-weight: 400;
+  font-size: 140%;
+  line-height: 1.4;
+  padding: 0;
+  margin: 0;
+  color: $clr-text;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+}
+
+.btn {
+  font-family: $font-main;
+  font-size: 1.4rem;
+  padding: 27.5px 83.5px;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: opacity 0.2s ease;
+
+  &:hover,
+  &:focus {
+    opacity: 0.9;
+  }
+
+  @media (max-width: 1330px) {
+    font-size: 1.2rem;
+    padding: 20px 60px;
+
+    &__text {
+      padding: 0;
+    }
+  }
+}
+
+.visually-hidden {
+  position: absolute !important;
+  white-space: nowrap !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  padding: 0 !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  margin: -1px !important;
+}
+
+@media (max-width: 991px) {
+  p {
+    font-size: 1.4rem;
+  }
+}
+
+.navigation-item__icon {
+  color: $clr-decor-secondary;
+}

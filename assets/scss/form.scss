@@ -24,3 +24,18 @@
     }
   }
 }
+
+.mobile--navigation {
+  .select-lang {
+    max-width: 200px;
+    margin: 0 auto;
+
+    .vs__selected {
+      color: $clr-secondary;
+    }
+
+    .vs__open-indicator {
+      fill: $clr-secondary;
+    }
+  }
+}

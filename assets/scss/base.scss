@@ -24,6 +24,10 @@ body {
   color: $clr-text;
   overflow-x: hidden;
   padding-top: 64px;
+
+  @media screen and (max-width: 768px) {
+    padding-top: 0;
+  }
 }
 
 a {

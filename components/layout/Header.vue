@@ -1,9 +1,7 @@
 <template lang="pug">
   header.header-page
     .wrapper_inner
-      .mobile--navigation
-        button.btn.btn__toggle
-          span.caption Меню
+      <MobileNav />
       nuxt-link(to="/").logo
         span.logo--icon(v-html="logoIcon")
         strong.logo--caption CoinLoan
@@ -12,9 +10,11 @@
 
 <script>
 import UserNav from '~/components/header/UserNav.vue'
+import MobileNav from '~/components/header/MobileNav.vue'
 export default {
   components: {
     UserNav,
+    MobileNav,
   },
   data() {
     return {
@@ -45,52 +45,8 @@ export default {
     padding: 16px 33px;
     box-shadow: 0 2px 4px rgb(166 166 166 / 50%);
 
-    .mobile--navigation {
-      display: none;
-
-      .btn__toggle {
-        border: none;
-        background-color: transparent;
-        font: inherit;
-        color: inherit;
-        padding: 0;
-        margin: 0;
-        font-size: 0;
-        line-height: 0;
-        width: 20px;
-        height: 15px;
-
-        .caption {
-          display: block;
-          background-color: $clr-secondary;
-          width: 20px;
-          height: 2px;
-          border-radius: 4px;
-          position: relative;
-
-          &::before,
-          &::after {
-            content: "";
-            width: 100%;
-            height: 100%;
-            left: 0;
-            position: absolute;
-            background-color: currentColor;
-          }
-
-          &::before {
-            top: -300%;
-          }
-
-          &::after {
-            top: 300%;
-          }
-        }
-      }
-
-      @media screen and (max-width: 768px) {
-        display: flex;
-      }
+    @media screen and (max-width: 768px) {
+      position: static;
     }
   }
 

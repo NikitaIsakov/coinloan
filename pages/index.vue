@@ -1,9 +1,9 @@
 <template lang="pug">
-  <div>
+  <div class="page-wrap">
     <Header />
-    main.main
+    main.main-page
       <Aside />
-      section.content
+      section.page--content
         | main content
   </div>
 </template>
@@ -19,3 +19,16 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  @import '@/assets/scss/vars.scss';
+
+  .page--content {
+    background-color: $clr-bg-content;
+  }
+
+  .main-page {
+    min-height: calc(100vh - 64px);
+  }
+
+</style>

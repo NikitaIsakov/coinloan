@@ -1,5 +1,5 @@
 <template lang="pug">
-  header.header
+  header.header-page
     .wrapper_inner
       .mobile--navigation
         button.btn.btn__toggle
@@ -35,9 +35,13 @@ export default {
     align-items: center;
   }
 
-  .header {
+  .header-page {
     background-color: $clr-primary;
     color: $clr-secondary;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     padding: 16px 33px;
     box-shadow: 0 2px 4px rgb(166 166 166 / 50%);
 

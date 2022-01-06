@@ -1,0 +1,12 @@
+.main-page {
+  display: flex;
+
+  .page--aside {
+    max-width: 224px;
+    width: 100%;
+  }
+
+  .page--content {
+    width: 100%;
+  }
+}

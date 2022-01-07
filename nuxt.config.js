@@ -41,6 +41,10 @@ export default {
     '@nuxtjs/axios',
   ],
 
+  env: {
+    baseUrl: 'http://localhost:4200/',
+  },
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
 

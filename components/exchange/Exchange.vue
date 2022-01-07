@@ -32,6 +32,10 @@ export default {
       desktop: true,
       mobile: false,
       tablet: false,
+      сurrencies: [],
+      commissions: [],
+      currencyList: [],
+      exchangeRateList: [],
     }
   },
   mounted() {
@@ -53,6 +57,37 @@ export default {
         this.tablet = false;
       }
     },
+    generateCurList: function() {
+      // Генерация валютных пар
+      let curr = this.сurrencies;
+      for (let i = 0; i < curr.length; i++) {
+        for (let j = 0; j < curr.length; j++) {
+          if (curr[i] != curr[j]) {
+            this.currencyList.push({base_currency: curr[i], quote_currency: curr[j], commissifeon: this.commissions[Math.floor(Math.random() * (5))]});
+          }
+        }
+      }
+    },
+    generateExRate: function() {
+      // Генерация курса валют.
+      let curr = this.сurrencies;
+      let min = 10;
+      let max = 100;
+
+      for (let i = 0; i < curr.length; i++) {
+        for (let j = 0; j < curr.length; j++) {
+          if (curr[i] != curr[j]) {
+            this.exchangeRateList.push({pair: `${curr[i]}/${curr[j]}`, rate: Math.floor(Math.random() * (max - min + 1)) + min});
+          }
+        }
+      }
+    }
+  },
+  async fetch() {
+    this.сurrencies = await fetch(process.env.baseUrl + 'currencies').then(res => res.json());
+    this.commissions = await fetch(process.env.baseUrl + 'commissions').then(res => res.json());
+    this.generateCurList();
+    this.generateExRate();
   },
 }
 </script>

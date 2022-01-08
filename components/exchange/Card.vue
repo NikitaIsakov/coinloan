@@ -1,5 +1,5 @@
 <template lang="pug">
-  .card
+  .card(:class="'card__' + theme")
     .card--header
       h2.card--title {{title}}
     .card--content
@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  props: ['title'],
+  props: ['title', 'theme'],
 }
 </script>
 
@@ -24,7 +24,9 @@ export default {
     width: 100%;
 
     &:not(:last-child) {
-      margin-right: 15px;
+      @media screen and (min-width: 1201px) {
+        margin-right: 15px;
+      }
     }
 
     &--header {
@@ -39,6 +41,34 @@ export default {
     &--content {
       padding: 25px 0;
       height: 100%;
+    }
+
+    &__exchange {
+      .description--list {
+        display: none;
+
+        @media screen and (max-width: 1200px) {
+          display: block;
+        }
+      }
+
+      .btn__submit {
+        display: none;
+
+        @media screen and (max-width: 1200px) {
+          display: block;
+        }
+      }
+    }
+
+    &__exchange-description {
+      @media screen and (max-width: 1200px) {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      padding: 20px;
     }
   }
 

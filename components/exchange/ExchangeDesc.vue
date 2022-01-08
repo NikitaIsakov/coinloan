@@ -1,5 +1,11 @@
 <template lang="pug">
   ul.description--list
+    li.description--item(v-if="full")
+      .description--caption Ваш Евро баланс
+      .description--value 0 EUR
+    li.description--item
+      .description--caption Ваш Евро баланс
+      .description--value 0 EUR
     li.description--item
       .description--caption Ваш Евро баланс
       .description--value 0 EUR
@@ -7,7 +13,12 @@
 
 <script>
 export default {
-  
+  props: {
+    full: {
+      type: Boolean,
+      default: true
+    },
+  }
 }
 </script>
 

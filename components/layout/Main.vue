@@ -27,6 +27,10 @@ export default {
   .page--content {
     background-color: $clr-bg-content;
     padding: 50px 35px 25px;
+
+    @media screen and (max-width: 768px) {
+      padding: 25px 15px;
+    }
   }
 
   .page--title {
@@ -39,6 +43,10 @@ export default {
     display: flex;
     align-items: center;
     margin-bottom: 25px;
+
+    @media screen and (max-width: 1200px) {
+      display: none;
+    }
   }
 
   .content--icon {

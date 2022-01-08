@@ -1,13 +1,13 @@
 <template lang="pug">
   .wrap-cards
-    <Card :title="'Обменять EUR на BTC'">
+    <Card :title="'Обменять EUR на BTC'" :theme="'exchange'">
       form(slot="content")
-        <ExchangeDesc v-show="tablet || mobile"/>
+        <ExchangeDesc :full="false"/>
         <ExInput :inputSup="'Вы платите'" :inputSub="'Доступно:0 EUR'" :inputPlaceholder="'Сумма платежа'" />
         <ExInput :inputSup="'Вы получаете'" :inputSub="'Доступно:0 BTC'" :inputPlaceholder="'Сумма получения'"/>
-        <ExchangeSubmit v-show="tablet || mobile"/>
+        <ExchangeSubmit/>
     </Card>
-    <Card :title="'Краткое описание'" v-show="desktop">
+    <Card :title="'Краткое описание'" :theme="'exchange-description'">
       form.wrap-description(slot="content")
         <ExchangeDesc />
         <ExchangeSubmit />
@@ -58,6 +58,7 @@ export default {
       }
     },
     generateCurList: function() {
+      console.log(this.$device.isDesktop);
       // Генерация валютных пар
       let curr = this.сurrencies;
       for (let i = 0; i < curr.length; i++) {

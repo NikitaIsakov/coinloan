@@ -53,6 +53,7 @@ export default {
   .aside--footer {
     padding: 24px;
     position: relative;
+    margin-top: 15px;
 
     &::before {
       content: "";

@@ -1,0 +1,30 @@
+.navigation-item__icon {
+  color: $clr-decor-secondary;
+}
+
+.wallet-nav__icon {
+  .fa-primary {
+    color: $clr-decor-secondary;
+  }
+
+  .fa-secondary {
+    color: $clr-decor;
+  }
+}
+
+.nuxt-link-exact-active {
+  .wallet-nav__icon {
+    .fa-primary {
+      color: $clr-primary;
+    }
+
+    .fa-secondary {
+      color: $clr-third;
+    }
+  }
+}
+
+.vs__open-indicator {
+  fill: $clr-primary;
+  transform: scale(0.8);
+}

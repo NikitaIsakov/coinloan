@@ -1,10 +1,10 @@
 <template lang="pug">
   .wrap-cards
-    <Card :title="'Обменять EUR на BTC'" :theme="'exchange'">
+    <Card :title="`Обменять ${currentFirst} на ${currentSecond}`" :theme="'exchange'">
       form(slot="content")
         <ExchangeDesc :full="false"/>
-        <ExInput :inputSup="'Вы платите'" :inputSub="'Доступно:0 EUR'" :inputPlaceholder="'Сумма платежа'" />
-        <ExInput :inputSup="'Вы получаете'" :inputSub="'Доступно:0 BTC'" :inputPlaceholder="'Сумма получения'"/>
+        <ExFormControl :currencyList="сurrencies" :currencySelected="currentFirst" :inputSup="'Вы платите'" :inputSub="'Доступно:0 EUR'" :inputVal="valuteFirstVal" :inputPlaceholder="'Сумма платежа'" @valutaVal="valutaFirst" @currencyVal="currencyFirst"/>
+        <ExFormControl :currencyList="сurrenciesSecond" :currencySelected="currentSecond" :inputSup="'Вы получаете'" :inputSub="'Доступно:0 BTC'" :inputVal="valuteSecondVal" :inputPlaceholder="'Сумма получения'" @valutaVal="valutaSecond" @currencyVal="currencySecond"/>
         <ExchangeSubmit/>
     </Card>
     <Card :title="'Краткое описание'" :theme="'exchange-description'">
@@ -16,49 +16,38 @@
 
 <script>
 import Card from '@/components/exchange/Card';
-import ExInput from '@/components/exchange/ExInput';
+import ExFormControl from '@/components/exchange/ExFormControl';
 import ExchangeDesc from '@/components/exchange/ExchangeDesc';
 import ExchangeSubmit from '@/components/exchange/ExchangeSubmit';
 
 export default {
   components: {
     Card,
-    ExInput,
+    ExFormControl,
     ExchangeDesc,
     ExchangeSubmit
   },
   data() {
     return {
-      desktop: true,
-      mobile: false,
-      tablet: false,
+      valuteFirstVal: '',
+      valuteSecondVal: '',
+      currentFirst: 'RUB',
+      currentSecond: 'EUR',
+      currentRait: '',
+      currentCommissions: '',
       сurrencies: [],
       commissions: [],
       currencyList: [],
+      сurrenciesSecond: [],
       exchangeRateList: [],
     }
   },
   mounted() {
-    window.addEventListener('resize', this.updateWidth);
+    this.updateCurrentVal();
+    this.correctionCurriencyList();
   },
   methods: {
-    updateWidth() {
-      if (document.documentElement.clientWidth <= 768) {
-        this.mobile = true;
-        this.desktop = false;
-        this.tablet = false;
-      } else if (document.documentElement.clientWidth > 768 && document.documentElement.clientWidth <= 1200) {
-        this.mobile = false;
-        this.desktop = false;
-        this.tablet = true;
-      } else {
-        this.desktop = true;
-        this.mobile = false;
-        this.tablet = false;
-      }
-    },
     generateCurList: function() {
-      console.log(this.$device.isDesktop);
       // Генерация валютных пар
       let curr = this.сurrencies;
       for (let i = 0; i < curr.length; i++) {
@@ -71,9 +60,9 @@ export default {
     },
     generateExRate: function() {
       // Генерация курса валют.
-      let curr = this.сurrencies;
-      let min = 10;
-      let max = 100;
+      const curr = this.сurrencies;
+      const min = 10;
+      const max = 100;
 
       for (let i = 0; i < curr.length; i++) {
         for (let j = 0; j < curr.length; j++) {
@@ -82,6 +71,50 @@ export default {
           }
         }
       }
+    },
+    updateCurrentVal: function () {
+      const currFirst = this.currentFirst;
+      const currSecond = this.currentSecond;
+
+      const currRaitItem = this.exchangeRateList.filter(function(item) {
+        return item.pair === `${currFirst}/${currSecond}`;
+      });
+      const currItem = this.currencyList.filter(function(item) {
+        return item.base_currency === currFirst && item.quote_currency === currSecond;
+      })
+      console.log(currRaitItem);
+      this.currentRait = currRaitItem[0].rate;
+      this.currentCommissions = currItem[0].commissifeon;
+    },
+    valutaFirst: function(data) {
+      this.valuteFirstVal = data.value;
+      this.valuteSecondVal = this.valutaTranslation(data.value);
+    },
+    valutaSecond: function(data) {
+      this.valuteSecondVal = data.value;
+      this.valuteFirstVal = this.valutaTranslation(data.value);
+    },
+    currencyFirst: function (data) {
+      this.currentFirst = data;
+      this.updateCurrentVal();
+      this.correctionCurriencyList();
+      this.valuteSecondVal = this.valutaTranslation(this.valuteFirstVal);
+    },
+    currencySecond: function(data) {
+      this.currentSecond = data
+      this.updateCurrentVal();
+      this.correctionCurriencyList();
+      this.valuteFirstVal = this.valutaTranslation(this.valuteSecondVal);
+    },
+    valutaTranslation: function(val) {
+      return val * this.currentRait;
+    },
+    valutaReverse: function() {
+      
+    },
+    correctionCurriencyList: function() {
+      const currFirst = this.currentFirst;
+      this.сurrenciesSecond = this.сurrencies.filter(function(f) { return f !== currFirst })
     }
   },
   async fetch() {
@@ -96,6 +129,22 @@ export default {
 <style lang="scss" scoped>
   .wrap-cards {
     display: flex;
+  }
+
+  .card {
+    &__exchange {
+      .description--list {
+        @media screen and (min-width: 1201px) {
+          display: none;
+        }
+      }
+
+      .btn__submit {
+        @media screen and (min-width: 1201px) {
+          display: none;
+        }
+      }
+    }
   }
 
 </style>

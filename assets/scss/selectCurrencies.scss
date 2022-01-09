@@ -1,0 +1,58 @@
+.form-control--select {
+  .v-select {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 41px;
+
+    .vs__dropdown-toggle {
+      height: 41px;
+      padding: 0 5px 0 20px;
+      min-width: 95px;
+      background-color: $clr-primary;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+
+      .vs__open-indicator {
+        fill: $clr-secondary;
+      }
+
+      .vs__search {
+        display: none;
+      }
+    }
+
+    .vs__selected {
+      color: $clr-secondary;
+      font-weight: 500;
+    }
+
+    .vs__dropdown-menu {
+      display: none;
+    }
+
+    &.vs--open {
+      width: 100%;
+      background-color: $clr-secondary;
+
+      .vs__dropdown-toggle {
+        height: 41px;
+        background-color: $clr-secondary;
+        color: $clr-text;
+        padding-left: 30px;
+        background-size: 15px;
+        background-position: 10px center;
+        background-repeat: no-repeat;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23afafaf' d='M31.008 27.231l-7.58-6.447c-0.784-0.705-1.622-1.029-2.299-0.998 1.789-2.096 2.87-4.815 2.87-7.787 0-6.627-5.373-12-12-12s-12 5.373-12 12 5.373 12 12 12c2.972 0 5.691-1.081 7.787-2.87-0.031 0.677 0.293 1.515 0.998 2.299l6.447 7.58c1.104 1.226 2.907 1.33 4.007 0.23s0.997-2.903-0.23-4.007zM12 20c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8z'%3E%3C/path%3E%3C/svg%3E");
+      }
+
+      .vs__dropdown-menu {
+        display: block;
+      }
+
+      .vs__search {
+        display: inline-block;
+      }
+    }
+  }
+}

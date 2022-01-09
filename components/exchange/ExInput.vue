@@ -1,45 +1,37 @@
 <template lang="pug">
-  .form--group
-    .form--control-suptitle {{inputSup}}
-    input.form--control(type="text" :placeholder="inputPlaceholder")
-    .form--control-subtitle {{inputSub}}
+  input.form--control(type="text" :placeholder="inputPlaceholder" @keydown="checkVal($event)" @blur="validValBlur" :value="this.inputVal")
 </template>
 
 <script>
 export default {
-  props: ['inputSup', 'inputSub', 'inputPlaceholder']
-}
-</script>
-
-<style lang="scss" scoped>
-  @import '@/assets/scss/vars.scss';
-
-  .form {
-    &--group {
-      margin-bottom: 20px;
+  props: ['inputVal','inputPlaceholder'],
+  data() {
+    return {
+      valuta: this.inputVal,
+      regex: /[^\d\.]/,
     }
-
-    &--control {
-      margin-bottom: 10px;
-      width: 100%;
-      border: 1px solid $clr-decor;
-      padding: 12px 15px;
-
-      &::placeholder {
-        color: $clr-text_gray;
-      }
-
-      &-suptitle {
-        font-weight: 500;
-        font-size: 1.4rem;
-        margin-bottom: 5px;
-      }
-
-      &-subtitle {
-        font-size: 1.2rem;
-        color: $clr-text_gray;
+  },
+  methods: {
+    checkVal: function(evt) {
+      this.valuta = evt.target.value;
+      this.validVal(evt, evt.target.value);
+      this.$emit('valutaVal', {
+        value: this.valuta,
+      })
+    },
+    validVal: function(evt) {
+      const charCode = evt.which;
+      console.log(evt);
+      // if (this.regex.test(evt.key) && !(charCode >= 37 && charCode <= 40) && (charCode != 8) && (charCode != 46)) {
+      //   console.log(true)
+      //   evt.preventDefault();
+      // }
+    },
+    validValBlur: function() {
+      if (this.regex.test(this.valuta)) {
+        this.valuta = '';
       }
     }
   }
-
-</style>
+}
+</script>

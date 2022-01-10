@@ -14,17 +14,9 @@ import ExSelect from '@/components/exchange/ExSelect'
 export default {
   components: {ExInput, ExSelect},
   props: ['inputSup', 'inputSub', 'inputVal','inputPlaceholder', 'currencyList', 'currencySelected'],
-  data() {
-    return {
-      // inputVal: '',
-    }
-  },
   methods: {
     collectionDataInput(data) {
-      // this.inputVal = data.value
-      this.$emit('valutaVal', {
-        value: data.value,
-      });
+      this.$emit('valutaVal', data);
     },
     collectionDataSelect(data) {
       this.$emit('currencyVal', data);

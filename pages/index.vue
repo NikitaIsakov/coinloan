@@ -1,10 +1,9 @@
 <template lang="pug">
-  <div class="page-wrap">
+  .page-wrap
     <Header />
     main.main-page
       <Aside />
       <Main />
-  </div>
 </template>
 
 <script>

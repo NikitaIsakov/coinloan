@@ -1,5 +1,5 @@
 <template lang="pug">
-  input.form--control(type="text" :placeholder="inputPlaceholder" @keydown="checkVal($event)" @blur="validValBlur" :value="this.inputVal")
+  input.form--control(type="text" :placeholder="inputPlaceholder" @keydown="validVal" @input="checkVal($event)" @blur="validValBlur($event)" :value="valuta")
 </template>
 
 <script>
@@ -9,28 +9,36 @@ export default {
     return {
       valuta: this.inputVal,
       regex: /[^\d\.]/,
+      fullRegex: /^\d+(\.\d+)?$/,
     }
   },
   methods: {
-    checkVal: function(evt) {
-      this.valuta = evt.target.value;
-      this.validVal(evt, evt.target.value);
+    emitVal() {
       this.$emit('valutaVal', {
         value: this.valuta,
       })
     },
+    checkVal: function(evt) {
+      this.valuta = evt.target.value;
+      this.emitVal();
+    },
     validVal: function(evt) {
       const charCode = evt.which;
-      console.log(evt);
-      // if (this.regex.test(evt.key) && !(charCode >= 37 && charCode <= 40) && (charCode != 8) && (charCode != 46)) {
-      //   console.log(true)
-      //   evt.preventDefault();
-      // }
+      if (this.regex.test(evt.key) && !(charCode >= 37 && charCode <= 40) && (charCode != 8) && (charCode != 46)) {
+        evt.preventDefault();
+      }
     },
-    validValBlur: function() {
-      if (this.regex.test(this.valuta)) {
+    validValBlur: function(evt) {
+      if (this.fullRegex.test(this.valuta)) {
+        this.valuta = Math.round((String(this.valuta)).replace(/^0+/, '') * 100) / 100;
+      } else {
         this.valuta = '';
       }
+    }
+  },
+  watch: { // надо убрать
+    'inputVal': function(value) {
+      this.valuta = value;
     }
   }
 }

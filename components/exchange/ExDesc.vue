@@ -1,14 +1,14 @@
 <template lang="pug">
   ul.description--list
     li.description--item(v-if="full")
-      .description--caption Ваш Евро баланс
-      .description--value 0 EUR
+      .description--caption {{exDesc.baseCurrency.caption}}
+      .description--value {{exDesc.baseCurrency.value}}
+    li.description--item(v-if="full")
+      .description--caption {{exDesc.quoteCurrency.caption}}
+      .description--value {{exDesc.quoteCurrency.value}}
     li.description--item
-      .description--caption Ваш Евро баланс
-      .description--value 0 EUR
-    li.description--item
-      .description--caption Ваш Евро баланс
-      .description--value 0 EUR
+      .description--caption {{exDesc.rateCaption.caption}}
+      .description--value {{exDesc.rateCaption.value}}
 </template>
 
 <script>
@@ -18,6 +18,9 @@ export default {
       type: Boolean,
       default: true
     },
+    exDesc: {
+      type: Object,
+    }
   }
 }
 </script>
@@ -37,7 +40,7 @@ export default {
       justify-content: space-between;
 
       &:not(:last-child) {
-        margin-bottom: 10px;
+        margin-bottom: 15px;
       }
     }
 

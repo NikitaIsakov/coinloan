@@ -1,64 +1,71 @@
 <template lang="pug">
-  .wrap-cards
-    <Card :title="'Обменять EUR на BTC'" :theme="'exchange'">
-      form(slot="content")
-        <ExchangeDesc :full="false"/>
-        <ExInput :inputSup="'Вы платите'" :inputSub="'Доступно:0 EUR'" :inputPlaceholder="'Сумма платежа'" />
-        <ExInput :inputSup="'Вы получаете'" :inputSub="'Доступно:0 BTC'" :inputPlaceholder="'Сумма получения'"/>
-        <ExchangeSubmit/>
-    </Card>
-    <Card :title="'Краткое описание'" :theme="'exchange-description'">
-      form.wrap-description(slot="content")
-        <ExchangeDesc />
-        <ExchangeSubmit />
-    </Card>
+  .exchange(:class="{ 'is-load': exLoad }")
+    .wrap-cards
+      <Card :title="`Обменять ${currentFirst} на ${currentSecond}`" :theme="'exchange'">
+        form(slot="content" @submit.prevent="formSubmit")
+          <ExDesc :full="false" :exDesc="exchangeDescription"/>
+          <ExFormControl :currencyList="сurrenciesFirst" :currencySelected="currentFirst" :inputSup="'Вы платите'" :inputSub="`Доступно:0 ${currentFirst}`" :inputVal="valuteFirstVal" :inputPlaceholder="'Сумма платежа'" @valutaVal="valutaFirst" @currencyVal="currencyFirst"/>
+          <ExFormControl :currencyList="сurrenciesSecond" :currencySelected="currentSecond" :inputSup="'Вы получаете'" :inputSub="`Доступно:0 ${currentSecond}`" :inputVal="valuteSecondVal" :inputPlaceholder="'Сумма получения'" @valutaVal="valutaSecond" @currencyVal="currencySecond"/>
+          <ExSubmit/>
+      </Card>
+      <Card :title="'Краткое описание'" :theme="'exchange-description'">
+        form.wrap-description(slot="content" @submit.prevent="formSubmit")
+          <ExDesc :exDesc="exchangeDescription"/>
+          <ExSubmit/>
+      </Card>
 </template>
 
 <script>
 import Card from '@/components/exchange/Card';
-import ExInput from '@/components/exchange/ExInput';
-import ExchangeDesc from '@/components/exchange/ExchangeDesc';
-import ExchangeSubmit from '@/components/exchange/ExchangeSubmit';
+import ExFormControl from '@/components/exchange/ExFormControl';
+import ExDesc from '@/components/exchange/ExDesc';
+import ExSubmit from '@/components/exchange/ExSubmit';
 
 export default {
   components: {
     Card,
-    ExInput,
-    ExchangeDesc,
-    ExchangeSubmit
+    ExFormControl,
+    ExDesc,
+    ExSubmit
   },
   data() {
     return {
-      desktop: true,
-      mobile: false,
-      tablet: false,
+      exLoad: false,
+      valuteFirstVal: '',
+      valuteSecondVal: '',
+      currentFirst: 'RUB',
+      currentSecond: 'EUR',
+      currentRate: '',
+      currentRateReverse: '',
+      currentCommissions: '',
       сurrencies: [],
       commissions: [],
       currencyList: [],
+      сurrenciesFirst: [],
+      сurrenciesSecond: [],
       exchangeRateList: [],
+      exchangeDescription: {
+        baseCurrency: {
+          caption: `Ваш RUB баланс`,
+          value: `0 RUB`,
+        },
+        quoteCurrency: {
+          caption: `Ваш EUR баланс`,
+          value: `0 EUR`,
+        },
+        rateCaption: {
+          caption: 'Курс',
+          value: `1 RUB = 80 EUR`,
+        },
+      },
     }
   },
   mounted() {
-    window.addEventListener('resize', this.updateWidth);
+    this.correctionCurriencyList();
+    this.updateDescriptionVal();
   },
   methods: {
-    updateWidth() {
-      if (document.documentElement.clientWidth <= 768) {
-        this.mobile = true;
-        this.desktop = false;
-        this.tablet = false;
-      } else if (document.documentElement.clientWidth > 768 && document.documentElement.clientWidth <= 1200) {
-        this.mobile = false;
-        this.desktop = false;
-        this.tablet = true;
-      } else {
-        this.desktop = true;
-        this.mobile = false;
-        this.tablet = false;
-      }
-    },
     generateCurList: function() {
-      console.log(this.$device.isDesktop);
       // Генерация валютных пар
       let curr = this.сurrencies;
       for (let i = 0; i < curr.length; i++) {
@@ -71,9 +78,10 @@ export default {
     },
     generateExRate: function() {
       // Генерация курса валют.
-      let curr = this.сurrencies;
-      let min = 10;
-      let max = 100;
+      this.exchangeRateList = [];
+      const curr = this.сurrencies;
+      const min = 10;
+      const max = 100;
 
       for (let i = 0; i < curr.length; i++) {
         for (let j = 0; j < curr.length; j++) {
@@ -82,6 +90,75 @@ export default {
           }
         }
       }
+
+      this.updateCurrentVal();
+    },
+    updateCurrentVal: function () {
+      this.exLoad = true;
+      const currFirst = this.currentFirst;
+      const currSecond = this.currentSecond;
+
+      const currRateItem = this.exchangeRateList.filter(function(item) {
+        return item.pair === `${currFirst}/${currSecond}`;
+      });
+      const currItem = this.currencyList.filter(function(item) {
+        return item.base_currency === currFirst && item.quote_currency === currSecond;
+      })
+
+      this.currentRate = currRateItem[0].rate;
+      this.currentCommissions = currItem[0].commissifeon;
+      this.currentRateReverse = Math.round((1 / currRateItem[0].rate) * 10000) / 10000;
+
+      this.exLoad = false;
+
+      this.updateDescriptionVal();
+      this.valuteSecondVal = this.valutaTranslation(this.valuteFirstVal, this.currentRate);
+      this.valuteFirstVal = this.valutaTranslation(this.valuteSecondVal, this.currentRateReverse, true);
+    },
+    valutaFirst: function(data) {
+      this.valuteFirstVal = data.value;
+      this.valuteSecondVal = this.valutaTranslation(data.value, this.currentRate);
+    },
+    valutaSecond: function(data) {
+      this.valuteSecondVal = data.value;
+      this.valuteFirstVal = this.valutaTranslation(data.value, this.currentRateReverse, true);
+    },
+    currencyFirst: function (data) {
+      this.currentFirst = data;
+      this.updateCurrentVal();
+      this.correctionCurriencyList();
+      this.updateDescriptionVal();
+      this.valuteSecondVal = this.valutaTranslation(this.valuteFirstVal, this.currentRate);
+    },
+    currencySecond: function(data) {
+      this.currentSecond = data
+      this.updateCurrentVal();
+      this.correctionCurriencyList();
+      this.updateDescriptionVal();
+      this.valuteFirstVal = this.valutaTranslation(this.valuteSecondVal, this.currentRateReverse, true);
+    },
+    valutaTranslation: function(val, rate, reverse) {
+      let commission = this.currentCommissions;
+      if (reverse) {
+        commission = 0;
+      }
+      return (val > 0) ? (Math.round(((val * rate) - ((val * rate) * (commission / 100))) * 100000000) / 100000000) : ''; // Округлил результат вычислений до 8 знаков после запятой
+    },
+    correctionCurriencyList: function() {
+      const currFirst = this.currentFirst;
+      const currSecond = this.currentSecond;
+      this.сurrenciesSecond = this.сurrencies.filter(function(f) { return f !== currFirst })
+      this.сurrenciesFirst = this.сurrencies.filter(function(f) { return f !== currSecond })
+    },
+    updateDescriptionVal: function() {
+      this.exchangeDescription.baseCurrency.caption = `Ваш ${this.currentFirst} баланс`;
+      this.exchangeDescription.baseCurrency.value = `0 ${this.currentFirst}`;
+      this.exchangeDescription.quoteCurrency.caption = `Ваш ${this.currentSecond} баланс`;
+      this.exchangeDescription.quoteCurrency.value = `0 ${this.currentSecond}`;
+      this.exchangeDescription.rateCaption.value = `1 ${this.currentFirst} = ${this.currentRate} ${this.currentSecond}`;
+    },
+    formSubmit: function() {
+      this.$emit('submit');
     }
   },
   async fetch() {
@@ -89,13 +166,42 @@ export default {
     this.commissions = await fetch(process.env.baseUrl + 'commissions').then(res => res.json());
     this.generateCurList();
     this.generateExRate();
+
+    this.refreshExRate = setInterval(function(){
+      this.generateExRate();
+    }.bind(this), 30000);
   },
 }
 </script>
 
 <style lang="scss" scoped>
+  .exchange {
+    transition: opacity 0.2s ease;
+
+    &.is-load {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+  }
+
   .wrap-cards {
     display: flex;
+  }
+
+  .card {
+    &__exchange {
+      .description--list {
+        @media screen and (min-width: 1201px) {
+          display: none;
+        }
+      }
+
+      .btn__submit {
+        @media screen and (min-width: 1201px) {
+          display: none;
+        }
+      }
+    }
   }
 
 </style>

@@ -43,24 +43,6 @@ export default {
       height: 100%;
     }
 
-    &__exchange {
-      .description--list {
-        display: none;
-
-        @media screen and (max-width: 1200px) {
-          display: block;
-        }
-      }
-
-      .btn__submit {
-        display: none;
-
-        @media screen and (max-width: 1200px) {
-          display: block;
-        }
-      }
-    }
-
     &__exchange-description {
       @media screen and (max-width: 1200px) {
         display: none;

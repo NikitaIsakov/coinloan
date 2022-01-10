@@ -1,45 +1,45 @@
 <template lang="pug">
-  .form--group
-    .form--control-suptitle {{inputSup}}
-    input.form--control(type="text" :placeholder="inputPlaceholder")
-    .form--control-subtitle {{inputSub}}
+  input.form--control(type="text" :placeholder="inputPlaceholder" @keydown="validVal" @input="checkVal($event)" @blur="validValBlur($event)" :value="valuta")
 </template>
 
 <script>
 export default {
-  props: ['inputSup', 'inputSub', 'inputPlaceholder']
-}
-</script>
-
-<style lang="scss" scoped>
-  @import '@/assets/scss/vars.scss';
-
-  .form {
-    &--group {
-      margin-bottom: 20px;
+  props: ['inputVal','inputPlaceholder'],
+  data() {
+    return {
+      valuta: this.inputVal,
+      regex: /[^\d\.]/,
+      fullRegex: /^\d+(\.\d+)?$/,
     }
-
-    &--control {
-      margin-bottom: 10px;
-      width: 100%;
-      border: 1px solid $clr-decor;
-      padding: 12px 15px;
-
-      &::placeholder {
-        color: $clr-text_gray;
+  },
+  methods: {
+    emitVal() {
+      this.$emit('valutaVal', {
+        value: this.valuta,
+      })
+    },
+    checkVal: function(evt) {
+      this.valuta = evt.target.value;
+      this.emitVal();
+    },
+    validVal: function(evt) {
+      const charCode = evt.which;
+      if (this.regex.test(evt.key) && !(charCode >= 37 && charCode <= 40) && (charCode != 8) && (charCode != 46)) {
+        evt.preventDefault();
       }
-
-      &-suptitle {
-        font-weight: 500;
-        font-size: 1.4rem;
-        margin-bottom: 5px;
+    },
+    validValBlur: function(evt) {
+      if (this.fullRegex.test(this.valuta)) {
+        this.valuta = Math.round((String(this.valuta)).replace(/^0+/, '') * 100) / 100;
+      } else {
+        this.valuta = '';
       }
-
-      &-subtitle {
-        font-size: 1.2rem;
-        color: $clr-text_gray;
-      }
+    }
+  },
+  watch: { // надо убрать
+    'inputVal': function(value) {
+      this.valuta = value;
     }
   }
-
-</style>
+}
+</script>
